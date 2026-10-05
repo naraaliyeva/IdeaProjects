@@ -14,4 +14,8 @@ public class Calculator {
         return first+ second;
 
     }
+
+    static void main(String[] args) {
+
+    }
 }

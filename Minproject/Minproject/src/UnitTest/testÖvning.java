@@ -10,9 +10,9 @@ public class testÖvning {
     @Test
     public void firstTestCase() {
 
-        String text = "some text";
+        String text = "Some text";
         int actual= text.length();
-        int expected=9;
+        int expected=8;
 
         assertEquals(expected, actual);
     }
