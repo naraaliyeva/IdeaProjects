@@ -22,6 +22,7 @@ public class Controller {
         return charsCount;
     }
 
+    //
     public int getRowsCount() {
         return sentences.size();
     }
