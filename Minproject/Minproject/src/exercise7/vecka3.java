@@ -10,7 +10,6 @@ public class vecka3 {
         String text = scan.nextLine();
 
 
-
         for(int i=0; i<text.length(); i++)
             System.out.print(text.charAt(i)+ " ");
     }
