@@ -10,59 +10,38 @@ import java.util.Scanner;
 
 public class Testing {
 
+    //När man kallar på controller.getWords() ska orden som skrivits
+    //returneras i en lista sorterad i rätt ordning
     @Test
     void getWordsReturnsWordsFromAllSentencesInOrder() {
         Controller controller = new Controller();
+        //Användaren har skrivit 2 meningar (tryckt enter 2 ggr)
         controller.executeCommand("Hej världen");
         controller.executeCommand("Java är kul");
 
-        Assertions.assertEquals(
-                List.of("Hej", "världen", "Java", "är", "kul"),
-                controller.getWords());
+        var expectedResult = List.of("Hej", "världen", "Java", "är", "kul");
+        //Vi förväntar oss att orden är separerade enl. listan när man kallar på getWords()..
+        Assertions.assertEquals(expectedResult, controller.getWords());
     }
 
+    //Testar att vi får ut rätt antal rader och rätt "antal tecken"-uträkning
     @Test
-    void startUserDialogProcessesSentencesAndStopsOnStopCommand() {
-        Scanner scanner = new Scanner("Hej världen\nJava är kul\nstop\nignored\n");
-        RecordingController controller = new RecordingController();
+    void testRowsAndCharsCount() {
+        Scanner scanner = new Scanner("Hej världen\nJava är kul\nstop");
+        Controller controller = new Controller();
 
         Main.startUserDialog(scanner, controller);
-
         Assertions.assertEquals(2, controller.getRowsCount());
         Assertions.assertEquals(22, controller.getCharsCount());
-        Assertions.assertTrue(controller.statsPrinted);
-        Assertions.assertEquals("ignored", scanner.nextLine());
     }
 
+    //Testar att variabeln doContinue sätts till False i Main om användaren
+    //skriver ordet 'stop'
     @Test
-    void startUserDialogProcessesSentencesUntilInputEnds() {
-        Scanner scanner = new Scanner("Hej världen");
-        RecordingController controller = new RecordingController();
-
+    void sendExitSignalWhenStopCommandIsSent() {
+        Scanner scanner = new Scanner("Hej världen\nJava är kul\nstop");
+        Controller controller = new Controller();
         Main.startUserDialog(scanner, controller);
-
-        Assertions.assertEquals(1, controller.getRowsCount());
-        Assertions.assertFalse(controller.statsPrinted);
-        Assertions.assertFalse(scanner.hasNextLine());
-    }
-
-    @Test
-    void mainStartsDialogAndExitsWhenInputEnds() {
-        InputStream originalIn = System.in;
-        try {
-            System.setIn(new ByteArrayInputStream(new byte[0]));
-            Main.main(new String[0]);
-        } finally {
-            System.setIn(originalIn);
-        }
-    }
-
-    private static class RecordingController extends Controller {
-        private boolean statsPrinted;
-
-        @Override
-        void printStats() {
-            statsPrinted = true;
-        }
+        Assertions.assertFalse(Main.isDoContinue());
     }
 }

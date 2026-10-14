@@ -3,42 +3,57 @@ package Inlamningsuppgift;
 import java.util.*;
 
 public class Controller {
-
-    private List<String> sentences;
+//lista som innehåller string attribut
+    public List<String> sentences;
 
     public Controller() {  //Konstruktor
          sentences = new ArrayList<>();
     }
-
-    public void executeCommand(String userInput) {
+// vi la userInput in i sentences
+    public boolean executeCommand(String userInput) {
+        if (userInput.equals("stop")) {
+            printStatistic();
+            return false;
+        }
         sentences.add(userInput);
+        return true;
     }
-
+//räknar tecken
     public int getCharsCount() {
         int charsCount = 0;
         for(var i=0; i < sentences.size(); i++) {
-            charsCount += sentences.get(i).length();
+            if(!sentences.get(i).isBlank()) {
+                charsCount += sentences.get(i).trim().length();
+            }
         }
         return charsCount;
     }
 
-    //
+
+//hur lång listan är med strengar/rader
     public int getRowsCount() {
         return sentences.size();
     }
-
+    //räknar ord
     public List<String> getWords() {
-        List<String> words = new ArrayList<>();
+        List<String> result = new ArrayList<>(); // skapar en tom lista där res samlas
         for(int i=0; i < sentences.size(); i++) {
-            words.addAll(Arrays.stream(sentences.get(i).split(" ")).toList());
+            //Tar ut en lista på ord från en rad - där blanksteg separerar ord
+            String[] rowWords = sentences.get(i).trim().split(" ");
+            for(int ii=0; ii < rowWords.length; ii++) {
+                if(!rowWords[ii].isBlank()) {
+                    result.add(rowWords[ii]);
+                }
+            }
         }
-        return words;
+        return result;
     }
 
     public String getLongestWord() {
-        var allWords = getWords();
-        var longestWord = "";
-        for(var i=0; i < allWords.size(); i++) {
+        //Tar alla ord du har skrivit, ett ord på varje rad i listan
+        List<String> allWords = getWords();
+        String longestWord = "";
+        for(int i=0; i < allWords.size(); i++) {
             if(allWords.get(i).length() > longestWord.length()) {
                 longestWord = allWords.get(i);
             }
@@ -46,7 +61,7 @@ public class Controller {
         return longestWord;
     }
 
-    void printStats() {
+    void printStatistic() {
 
         int rowsCount = getRowsCount();
         int charsCount = getCharsCount();
